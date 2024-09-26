@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tailor Shop Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 90%;
+            margin: 30px auto;
+            max-width: 1000px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            margin: 20px;
+        }
+        .size-details {
+            display: none; /* Initially hide the size details fields */
+        }
+        .card-header {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-group textarea {
+            resize: vertical;
+        }
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn:hover {
+            opacity: 0.9;
+        }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-warning {
+            background-color: #ffc107;
+            color: black;
+        }
+        .btn-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .btn-info i, .btn-success i, .btn-warning i {
+            margin-right: 8px;
+        }
+        @media (max-width: 768px) {
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tailor Shop Management</h1>
+
+        <!-- Customer Details Form -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-user"></i> Customer Details
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="customerName">Customer Name</label>
+                    <input type="text" id="customerName" placeholder="Enter customer name" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Address</label>
+                    <input type="text" id="customerAddress" placeholder="Enter address" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerPhone">Phone Number</label>
+                    <input type="text" id="customerPhone" placeholder="Enter phone number" required>
+                </div>
+                <div class="form-group">
+                    <label for="customerAddress">Email</label>
+                    <input type="text" id="customerEmail" placeholder="Enter email" required>
+                </div>
+                <button class="btn btn-success" onclick="submitCustomerDetails()">
+                    <i class="fas fa-check"></i> Submit Customer Details
+                </button>
+            </div>
+        </div>
+
+        <!-- Size Details -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-ruler"></i> Size Details
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="customerId">Customer ID</label>
+                    <input type="number" id="customerId" class="form-control" placeholder="Enter customer ID" required>
+                    <button class="btn btn-primary mt-2" onclick="fetchSizeDetails()">
+                        <i class="fas fa-search"></i> Fetch Size Details
+                    </button>
+                </div>
+                <div class="size-details">
+                    <div class="form-group">
+                        <label for="bottomLength">Bottom Length</label>
+                        <input type="number" id="bottomLength" class="form-control" placeholder="Enter bottom length" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="waist">Waist</label>
+                        <input type="number" id="waist" class="form-control" placeholder="Enter waist size" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="bottomLeg">Bottom Leg</label>
+                        <input type="number" id="bottomLeg" class="form-control" placeholder="Enter bottom leg length" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="topLength">Top Length</label>
+                        <input type="number" id="topLength" class="form-control" placeholder="Enter top length" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="collar">Collar</label>
+                        <input type="number" id="collar" class="form-control" placeholder="Enter collar size" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="chest">Chest</label>
+                        <input type="number" id="chest" class="form-control" placeholder="Enter chest size" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="sleeve">Sleeve</label>
+                        <input type="number" id="sleeve" class="form-control" placeholder="Enter sleeve length" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="shoulder">Shoulder</label>
+                        <input type="number" id="shoulder" class="form-control" placeholder="Enter shoulder width" step="0.01">
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" class="form-control" placeholder="Enter description">
+                    </div>
+                    <button class="btn btn-info" onclick="submitSizeDetails()">
+                        <i class="fas fa-save"></i> Save Size Details
+                    </button>
+                </div>
+            </div>
+        </div>
+    
+
+        <!-- Order Assignment -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-tachometer-alt"></i> Assign Order to Tailor
+            </div>
+            <div class="card-body">
+                <!-- New Order ID input block -->
+                <div class="form-group">
+                    <label for="orderIdInput">Order ID</label>
+                    <input type="text" id="orderIdInput" class="form-control" placeholder="Enter Order ID">
+                </div>
+        
+                <div class="form-group">
+                    <label for="assignTailor">Assign to Tailor</label>
+                    <select id="assignTailor" class="form-control">
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <button class="btn btn-success" onclick="assignOrder()">
+                    <i class="fas fa-user-tie"></i> Assign Order
+                </button>
+            </div>
+        </div>
+        
+
+        <!-- Order Status Update -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-calendar-check"></i> Order Status Update
+            </div>
+            <div class="card-body">
+                <!-- Order ID Input Block -->
+                <div class="form-group">
+                    <label for="orderId">Enter Order ID</label>
+                    <input type="number" id="orderId" class="form-control" placeholder="Enter Order ID" required>
+                </div>
+                <!-- Order Status Dropdown -->
+                <div class="form-group">
+                    <label for="orderStatus">Select Order Status</label>
+                    <select id="orderStatus" class="form-control" onchange="getOption()">
+                        <!-- These options will later be fetched dynamically from backend enums -->
+                        <option value="0">Ordered</option>
+                        <option value="1">In Progress</option>
+                        <option value="2">Stitched</option>
+                        <option value="3">Delivered</option>
+                    </select>
+                </div>
+                <button class="btn btn-warning" onclick="updateOrderStatus()">
+                    <i class="fas fa-edit"></i> Update Status
+                </button>
+                <div id="statusMessage"></div>
+            </div>
+        </div>
+        
+    </div>
+
+    <script src="./homepagescript.js"></script>
+</body>
+</html>
