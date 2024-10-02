@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Order</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        form div {
+            margin-bottom: 15px;
+        }
+        label {
+            font-size: 14px;
+            color: #555;
+        }
+        input[type="text"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, select:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .measurement-field {
+            display: none;
+        }
+    </style>
+    <script src="orders.js" defer></script>
+</head>
+<body>
+    <!-- New Order Form -->
+    <div class="container">
+        <h2>New Order</h2>
+        <form id="orderForm">
+            <div>
+                <label for="customerName">Customer Name</label>
+                <input type="text" id="customerName" required>
+            </div>
+            <div>
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" id="phoneNumber" required>
+            </div>
+            <div>
+                <label for="clothingType">Clothing Type</label>
+                <select id="clothingType" required onchange="updateSizeOptions()">
+                    <option value="">Select Clothing Type</option>
+                    <option value="Shirt">Shirt</option>
+                    <option value="Pant">Pant</option>
+                    <option value="Suit">Suit</option>
+                    <option value="Shalwar Kameez">Shalwar Kameez</option>
+                </select>
+            </div>
+
+            <!-- Size dropdown for shirt and pants -->
+            <div id="sizeField" class="measurement-field">
+                <label for="size">Size</label>
+                <select id="size">
+                    <option value="">Select Size</option>
+                </select>
+            </div>
+
+            <!-- Suit and Shalwar Kameez specific measurements -->
+            <div id="suitFields" class="measurement-field">
+                <label for="chestSize">Chest Size (17-50 cm)</label>
+                <input type="text" id="chestSize" placeholder="Enter chest size in cm">
+                <label for="sleeveLength">Sleeve Length (17-50 cm)</label>
+                <input type="text" id="sleeveLength" placeholder="Enter sleeve length in cm">
+                <label for="topLength">Top Length (17-50 cm)</label>
+                <input type="text" id="topLength" placeholder="Enter top length in cm">
+                <label for="bottomLength">Bottom Length (17-50 cm)</label>
+                <input type="text" id="bottomLength" placeholder="Enter bottom length in cm">
+                <label for="bottomWaist">Bottom Waist (30-40)</label>
+                <select id="bottomWaist">
+                    <option value="">Select Bottom Waist</option>
+                    <option value="30">30</option>
+                    <option value="32">32</option>
+                    <option value="34">34</option>
+                    <option value="36">36</option>
+                    <option value="38">38</option>
+                    <option value="40">40</option>
+                </select>
+            </div>
+
+            <button type="submit">Confirm Order</button>
+        </form>
+    </div>
+
+    <script>
+        // Function to update size options based on selected clothing type
+        function updateSizeOptions() {
+            const clothingType = document.getElementById('clothingType').value;
+            const sizeField = document.getElementById('sizeField');
+            const sizeSelect = document.getElementById('size');
+            const suitFields = document.getElementById('suitFields');
+
+            // Hide all measurement fields initially
+            sizeField.style.display = 'none';
+            suitFields.style.display = 'none';
+            sizeSelect.innerHTML = '<option value="">Select Size</option>';
+
+            // Define size options and show relevant fields based on clothing type
+            if (clothingType === 'Shirt') {
+                sizeField.style.display = 'block';
+                sizeSelect.innerHTML = '<option value="Small">Small</option><option value="Medium">Medium</option><option value="Large">Large</option><option value="X-Large">X-Large</option>';
+            } else if (clothingType === 'Pant') {
+                sizeField.style.display = 'block';
+                sizeSelect.innerHTML = '<option value="30">30</option><option value="32">32</option><option value="34">34</option><option value="36">36</option><option value="38">38</option><option value="40">40</option>';
+            } else if (clothingType === 'Suit' || clothingType === 'Shalwar Kameez') {
+                suitFields.style.display = 'block';
+            }
+        }
+
+        // Event listener for submitting new order
+        document.getElementById('orderForm')?.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            // Get form data
+            const customerName = document.getElementById('customerName').value;
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            const clothingType = document.getElementById('clothingType').value;
+
+            let sizeDetails = {};
+
+            // Gather size info based on clothing type
+            if (clothingType === 'Shirt' || clothingType === 'Pant') {
+                sizeDetails.size = document.getElementById('size').value;
+            } else if (clothingType === 'Suit' || clothingType === 'Shalwar Kameez') {
+                sizeDetails = {
+                    chestSize: document.getElementById('chestSize').value,
+                    sleeveLength: document.getElementById('sleeveLength').value,
+                    topLength: document.getElementById('topLength').value,
+                    bottomLength: document.getElementById('bottomLength').value,
+                    bottomWaist: document.getElementById('bottomWaist').value
+                };
+            }
+
+            // Create a new order object
+            const newOrder = {
+                customerName,
+                phoneNumber,
+                clothingType,
+                sizeDetails,
+                status: 'Pending' // Default status
+            };
+
+            try {
+                // Make POST request to API
+                const response = await fetch('https://your-api-endpoint.com/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(newOrder),
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit order');
+                }
+
+                // Redirect to listing page after successful submission
+                location.href = 'listing.html';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred while submitting the order. Please try again.');
+            }
+        });
+    </script>
+</body>
+</html>

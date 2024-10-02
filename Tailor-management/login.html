@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <h2 class="text-center">Login</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" id="username" placeholder="Username" required>
+                    </div>
+                    <div class="form-group">
+                        <input type="password" class="form-control" id="password" placeholder="Password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Login</button>
+                </form>
+                <p class="text-center mt-3">Don't have an account? <button id="signUpBtn" class="btn btn-link">Sign Up</button></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sign Up Modal -->
+    <div class="modal fade" id="signUpModal" tabindex="-1" role="dialog" aria-labelledby="signUpModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="signUpModalLabel">Sign Up</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="signUpForm">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="newUsername" placeholder="Username" required>
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="newPassword" placeholder="Password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Create Account</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        const loginUser = async (username, password) => {
+            try {
+                const response = await fetch('https://localhost:7075/api/UserLogin/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+        
+                const data = await response.json();
+        
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);  // Save token if needed
+                    window.location.href = 'dashboard.html';  // Redirect to dashboard
+                } else {
+                    alert(data.message || 'Invalid credentials! Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred. Please try again later.');
+            }
+        };
+        
+        const signUpUser = async (username, password) => {
+            try {
+                const response = await fetch('https://localhost:7075/api/User/Create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+        
+                const data = await response.json();
+        
+                if (response.ok) {
+                    alert('Account created successfully! You can now log in.');
+                    $('#signUpModal').modal('hide');  // Close modal
+                } else {
+                    alert(data.message || 'Sign-up failed. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during sign-up. Please try again later.');
+            }
+        };
+        
+        // Capture login form submission
+        document.querySelector('#loginForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+        
+            const username = document.querySelector('#username').value;
+            const password = document.querySelector('#password').value;
+        
+            loginUser(username, password);
+        });
+        
+        // Show sign-up modal when "Sign Up" button is clicked
+        document.querySelector('#signUpBtn').addEventListener('click', () => {
+            $('#signUpModal').modal('show');  // Show the modal
+        });
+        
+        // Capture sign-up form submission
+        document.querySelector('#signUpForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+        
+            const newUsername = document.querySelector('#newUsername').value;
+            const newPassword = document.querySelector('#newPassword').value;
+        
+            signUpUser(newUsername, newPassword);
+        });
+        
+    </script>
+</body>
+</html>
